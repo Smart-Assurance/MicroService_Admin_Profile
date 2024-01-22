@@ -7,6 +7,7 @@ import ma.fstt.microserviceprofileadmin.payload.request.UpdateAdministratorReque
 import ma.fstt.microserviceprofileadmin.payload.response.MessageResponse;
 import ma.fstt.microserviceprofileadmin.repository.AdministratorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -24,14 +25,33 @@ public class ProfileController {
     @Autowired
     public AdministratorRepository administratorRepository;
 
+    private final AuthService authService;
 
+    public ProfileController(AdministratorRepository administratorRepository,AuthService authService) {
+        this.administratorRepository = administratorRepository;
+        this.authService = authService;
+    }
+
+    private String extractTokenFromHeader(String authorizationHeader) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
+        }
+        return null;
+    }
     //update admin
     @PutMapping("/admin")
     public ResponseEntity<MessageResponse> updateInfoAministrator(
             @PathVariable String adminId,
-            @RequestBody UpdateAdministratorRequest updateAdministratorRequest
+            @RequestBody UpdateAdministratorRequest updateAdministratorRequest,
+            @RequestHeader("Authorization") String authorizationHeader
     ) {
         try {
+            // Extract the token from the Authorization header
+            String token = extractTokenFromHeader(authorizationHeader);
+            if (!authService.isValidAdministratorToken(token)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse(401, "Not authorized"));
+            }
+
             Optional<Administrator> optionalAdministrator = administratorRepository.findById(adminId);
             if (optionalAdministrator.isPresent()) {
                 Administrator administrator = optionalAdministrator.get();
