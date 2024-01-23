@@ -39,7 +39,7 @@ public class ProfileController {
         return null;
     }
     //update admin
-    @PutMapping("/admin")
+    @PutMapping("/admin/{adminId}")
     public ResponseEntity<MessageResponse> updateInfoAministrator(
             @PathVariable String adminId,
             @RequestBody UpdateAdministratorRequest updateAdministratorRequest,
