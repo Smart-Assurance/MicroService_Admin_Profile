@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ma.fstt</groupId>
-	<artifactId>microservice-profile-admin</artifactId>
+	<artifactId>microservice-admin</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>microservice-profile-admin</name>
-	<description>microservice-profile-admin</description>
+	<name>microservice-admin</name>
+	<description>microservice-admin</description>
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2023.0.0</spring-cloud.version>
